@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Modal from "./Modal";
 import authService from "@/services/auth";
+import { GoogleLogin } from "react-google-login";
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props"
 
 const RegisterForm = () => {
   const router = useRouter();
@@ -59,6 +61,16 @@ const RegisterForm = () => {
     }
   };
 
+  const responseGoogle = (response) => {
+    console.log(response);
+    // You can use the response to authenticate the user in your backend
+  };
+
+  const responseFacebook = (response) => {
+    console.log(response);
+    // You can use the response to authenticate the user in your backend
+  };
+
   return (
     <>
       <div className="w-screen h-screen">
@@ -77,26 +89,43 @@ const RegisterForm = () => {
                 </h2>
               </div>
               <div className="w-full flex flex-col items-stretch gap-4">
-                <button className="text-center form-input form-input-normal text-gray-500">
-                  <Image
-                    src={"/images/google-logo.svg"}
-                    alt="google"
-                    className="absolute"
-                    width={25}
-                    height={25}
+                <GoogleLogin
+                    clientId="THIS IS YOUR CLIENT_ID"
+                    buttonText="Continue with Google"
+                    onSuccess={responseGoogle}
+                    onFailure={responseGoogle}
+                    cookiePolicy={'single_host_origin'}
+                    render={renderProps => (
+                      <button onClick={renderProps.onClick} disabled={renderProps.disabled} className="text-center form-input form-input-normal text-gray-500">
+                        <Image
+                          src={"/images/google-logo.svg"}
+                          alt="google"
+                          className="absolute"
+                          width={25}
+                          height={25}
+                        />
+                        Continue with Google
+                      </button>
+                    )}
                   />
-                  Continue with Google
-                </button>
-                <button className="text-center form-input form-input-normal text-gray-500">
-                  <Image
-                    src={"/images/facebook-logo.svg"}
-                    alt="google"
-                    className="absolute"
-                    width={25}
-                    height={25}
+                  <FacebookLogin
+                    appId="YOUR_FACEBOOK_APP_ID" // Replace with your Facebook App ID
+                    autoLoad={false}
+                    fields="name,email,picture"
+                    callback={responseFacebook}
+                    render={renderProps => (
+                      <button onClick={renderProps.onClick} className="text-center form-input form-input-normal text-gray-500">
+                        <Image
+                          src={"/images/facebook-logo.svg"}
+                          alt="facebook"
+                          className="absolute"
+                          width={25}
+                          height={25}
+                        />
+                        Continue with Facebook
+                      </button>
+                    )}
                   />
-                  Continue with Facebook
-                </button>
               </div>
               <p className="text-standard text-center m-1">
                 or continue with email
